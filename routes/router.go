@@ -8,4 +8,5 @@ import (
 
 func BotnetRoute(router *gin.Engine) {
 	router.GET("/ping", controllers.Ping())
+	router.POST("/new", controllers.CreateBot())
 }

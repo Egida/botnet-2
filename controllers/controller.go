@@ -17,7 +17,7 @@ import (
 var botCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
 var validate = validator.New()
 
-func CreateUser() gin.HandlerFunc {
+func CreateBot() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var bot models.Bot
