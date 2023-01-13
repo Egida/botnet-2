@@ -1,8 +1,8 @@
 package main
 
 import (
-	"botnet/configs"
-	"botnet/routes"
+	"botnet/server/configs"
+	"botnet/server/routes"
 	"os"
 
 	"github.com/gin-gonic/gin"

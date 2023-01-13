@@ -2,10 +2,10 @@ package configs
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
+	"github.com/pterm/pterm"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -28,7 +28,7 @@ func ConnectDB() *mongo.Client {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Connected to MongoDB")
+	pterm.Info.Println("Connected to the database")
 
 	return client
 }

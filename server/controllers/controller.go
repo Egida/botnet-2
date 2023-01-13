@@ -1,20 +1,21 @@
 package controllers
 
 import (
-	"botnet/configs"
-	"botnet/models"
-	"botnet/responses"
+	"botnet/server/configs"
+	"botnet/server/models"
+	"botnet/server/responses"
 	"context"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var botCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
+var botCollection *mongo.Collection = configs.GetCollection(configs.DB, "bots")
 var validate = validator.New()
 
 func CreateBot() gin.HandlerFunc {
@@ -36,8 +37,12 @@ func CreateBot() gin.HandlerFunc {
 		}
 
 		newBot := models.Bot{
-			Id:       primitive.NewObjectID(),
 			Os:       bot.Os,
+			Ram:      bot.Ram,
+			Cpu:      bot.Cpu,
+			Disk:     bot.Disk,
+			Platform: bot.Platform,
+			Hostname: bot.Hostname,
 			Ip:       bot.Ip,
 			Location: bot.Location,
 		}

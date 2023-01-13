@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"botnet/controllers"
+	"botnet/server/controllers"
 
 	"github.com/gin-gonic/gin"
 )
