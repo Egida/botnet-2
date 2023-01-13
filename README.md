@@ -8,8 +8,8 @@ A botnet written in golang for Windows and Linux
 | Feature | Status |
 | :--- | :--- |
 | Get system information | :white_check_mark: |
-| Reverse shell | :construction: |
+| Reverse shell access to each bot | :construction: |
 | All bots ping a specified domain | :construction: |
-| Steal wifi passwords | :construction: |
-| Web interface | :construction: |
+| Steal saved passwords from each bot | :construction: |
+| Web interface to interact with bots | :construction: |
 | Bot automatic updates | :construction: |
