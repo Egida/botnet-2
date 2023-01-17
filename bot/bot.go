@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"os/user"
+	"runtime"
 
+	"github.com/gen2brain/beeep"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
@@ -18,7 +23,45 @@ type SysInfo struct {
 }
 
 func main() {
+	checkAdmin()
+}
+
+func checkAdmin() {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	if err != nil {
+		// Not an admin
+		notification("Run as admin to get a better analysis of your computer.")
+		os.Exit(0)
+	}
+	// Is an admin
+	detectOs()
 	sysInfo()
+}
+
+func notification(msg string) {
+	err := beeep.Alert("Alert", msg, "")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func get_username() {
+	user, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(user.Name)
+}
+
+func detectOs() {
+	sys := runtime.GOOS
+
+	if sys != "windows" {
+		os.Exit(0)
+	}
+	return
 }
 
 func sysInfo() {
