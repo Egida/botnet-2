@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/user"
 	"runtime"
@@ -38,6 +40,7 @@ func checkAdmin() {
 	}
 	// Is an admin
 	detectOs()
+	fmt.Printf("[+] IP ADDRESS: %s", get_ip())
 	sysInfo()
 	ping("1.1.1.1", 1)
 }
@@ -50,12 +53,27 @@ func notification(msg string) {
 	}
 }
 
+func get_ip() string {
+	lesp, err := http.Get("https://ifconfig.me")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mybody, err := ioutil.ReadAll(lesp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sbs := string(mybody)
+	return sbs
+}
+
 func ping(ip string, pingCount int) {
 	for i := 0; i < pingCount; i++ {
 		p := fastping.NewPinger()
 		ra, err := net.ResolveIPAddr("ip4:icmp", ip)
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 			os.Exit(1)
 		}
 		p.AddIPAddr(ra)
@@ -63,11 +81,11 @@ func ping(ip string, pingCount int) {
 			fmt.Printf("\n[+] IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
 		}
 		p.OnIdle = func() {
-			fmt.Println("\n[+] Ping completed!")
+			fmt.Print("[+] Ping completed!")
 		}
 		err = p.Run()
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 	}
 }
@@ -78,7 +96,7 @@ func get_username() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(user.Name)
+	fmt.Printf("%s", user.Name)
 }
 
 func detectOs() {
@@ -105,5 +123,5 @@ func sysInfo() {
 	info.RAM = vmStat.Total / 1024 / 1024
 	info.Disk = diskStat.Total / 1024 / 1024
 
-	fmt.Print(info.Hostname)
+	fmt.Printf("\n%s", info.Hostname)
 }
