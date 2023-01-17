@@ -3,15 +3,18 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/user"
 	"runtime"
+	"time"
 
 	"github.com/gen2brain/beeep"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/mem"
+	"github.com/tatsushid/go-fastping"
 )
 
 type SysInfo struct {
@@ -36,6 +39,7 @@ func checkAdmin() {
 	// Is an admin
 	detectOs()
 	sysInfo()
+	ping("1.1.1.1", 1)
 }
 
 func notification(msg string) {
@@ -43,6 +47,28 @@ func notification(msg string) {
 
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func ping(ip string, pingCount int) {
+	for i := 0; i < pingCount; i++ {
+		p := fastping.NewPinger()
+		ra, err := net.ResolveIPAddr("ip4:icmp", ip)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		p.AddIPAddr(ra)
+		p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
+			fmt.Printf("\n[+] IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+		}
+		p.OnIdle = func() {
+			fmt.Println("\n[+] Ping completed!")
+		}
+		err = p.Run()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
